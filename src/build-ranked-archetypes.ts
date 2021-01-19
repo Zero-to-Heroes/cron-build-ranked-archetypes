@@ -2,6 +2,7 @@
 import { ServerlessMysql } from 'serverless-mysql';
 import SqlString from 'sqlstring';
 import { gzipSync } from 'zlib';
+import { ArchetypeResults, ArchetypeStats, DeckList } from './archetype-stats';
 import { getConnection } from './db/rds';
 import { S3 } from './db/s3';
 import { groupByFunction, http } from './utils/util-functions';
@@ -25,7 +26,7 @@ export default async (event): Promise<any> => {
 
 	mysql.end();
 
-	const stats: Stats = {
+	const stats: ArchetypeStats = {
 		lastPatch: statsForLastPatch,
 	};
 
@@ -99,24 +100,6 @@ interface InternalResult {
 	readonly gameFormat: 'standard' | 'wild';
 	readonly playerArchetypeId: string;
 	readonly playerDeckstring: string;
-	readonly wins: number;
-	readonly losses: number;
-}
-
-interface Stats {
-	readonly lastPatch: readonly ArchetypeResults[];
-}
-
-interface ArchetypeResults {
-	readonly archetypeId: string;
-	readonly gameFormat: 'standard' | 'wild';
-	readonly wins: number;
-	readonly losses: number;
-	readonly decklists: readonly DeckList[];
-}
-
-interface DeckList {
-	readonly deckstring: string;
 	readonly wins: number;
 	readonly losses: number;
 }
