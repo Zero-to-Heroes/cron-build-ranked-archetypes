@@ -12,6 +12,7 @@ export interface ArchetypeResults {
 
 export interface DeckList {
 	readonly deckstring: string;
+	readonly cards: readonly string[];
 	readonly wins: number;
 	readonly losses: number;
 }
