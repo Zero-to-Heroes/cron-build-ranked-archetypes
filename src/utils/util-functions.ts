@@ -16,7 +16,6 @@ async function http(request: RequestInfo): Promise<any> {
 		fetch(request)
 			.then(
 				response => {
-					// console.log('received response, reading text body');
 					return response.text();
 				},
 				error => {
@@ -24,7 +23,6 @@ async function http(request: RequestInfo): Promise<any> {
 				},
 			)
 			.then(body => {
-				// console.log('sending back body', body && body.length);
 				resolve(body);
 			});
 	});

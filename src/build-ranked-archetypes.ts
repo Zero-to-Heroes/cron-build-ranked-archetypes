@@ -35,11 +35,8 @@ export default async (event): Promise<any> => {
 	};
 
 	const stringResults = JSON.stringify(stats);
-	console.log('stringified results');
 	const gzippedResults = gzipSync(stringResults);
-	console.log('zipped results');
 	await s3.writeFile(gzippedResults, 'static.zerotoheroes.com', 'api/ranked-decks.json', 'application/json', 'gzip');
-	console.log('new stats saved to s3');
 
 	return { statusCode: 200, body: null };
 };
@@ -56,7 +53,6 @@ const buildStatsForLastPatch = async (mysql: ServerlessMysql, date: string): Pro
 		WHERE creationDate > ${escape(date)}
 		GROUP BY gameFormat, playerArchetypeId, playerDeckstring;
 	`;
-	console.log('running query', query);
 	const dbResults: readonly InternalResult[] = await mysql.query(query);
 
 	const groupedByArchetype = groupByFunction((result: InternalResult) => result.playerArchetypeId)(dbResults);
@@ -103,7 +99,6 @@ const explodeCards = (deckstring: string): readonly string[] => {
 					.map(card => card.id)
 			: [];
 	} catch (e) {
-		console.log('could not decod', deckstring);
 		return null;
 	}
 };

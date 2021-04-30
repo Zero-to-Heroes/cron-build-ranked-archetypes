@@ -37,7 +37,6 @@ export class S3 {
 			return;
 		}
 		const input = { Bucket: bucketName, Key: key };
-		console.log('getting s3 object', input);
 		this.s3.getObject(input, (err, data) => {
 			if (err) {
 				console.warn('could not read s3 object', bucketName, key, err, retriesLeft);
@@ -47,7 +46,6 @@ export class S3 {
 				return;
 			}
 			const objectContent = data.Body.toString('utf8');
-			console.log('read object content', bucketName, key, data);
 			callback(objectContent);
 		});
 	}
@@ -65,7 +63,6 @@ export class S3 {
 			return;
 		}
 		const input = { Bucket: bucketName, Key: key };
-		// console.log('getting s3 object', input);
 		this.s3.getObject(input, async (err, data) => {
 			if (err) {
 				console.warn('could not read s3 object', bucketName, key, err, retriesLeft);
@@ -77,9 +74,7 @@ export class S3 {
 			try {
 				const zipContent = await loadAsync(data.Body as any);
 				const file = Object.keys(zipContent.files)[0];
-				// console.log('files in zip', zipContent.files, file);
 				const objectContent = await zipContent.file(file).async('string');
-				// console.log('read object content', objectContent);
 				callback(objectContent);
 			} catch (e) {
 				console.warn('could not read s3 object', bucketName, key, err, retriesLeft, e);
@@ -93,7 +88,6 @@ export class S3 {
 
 	public async writeCompressedFile(content: any, bucket: string, fileName: string): Promise<boolean> {
 		const jszip = new JSZip.default();
-		console.log('ready to zip', content?.length);
 		jszip.file('replay.xml', content);
 		const blob: Buffer = await jszip.generateAsync({
 			type: 'nodebuffer',
@@ -102,7 +96,6 @@ export class S3 {
 				level: 9,
 			},
 		});
-		console.log('built blob');
 		return this.writeFile(blob, bucket, fileName, 'application/zip');
 	}
 
@@ -124,7 +117,6 @@ export class S3 {
 			if (encoding) {
 				input.ContentEncoding = encoding;
 			}
-			console.log('writing file with input', input);
 			this.s3.upload(input, (err, data) => {
 				if (err) {
 					console.error('could not upload file to S3', err, input);
