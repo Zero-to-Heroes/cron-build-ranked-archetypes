@@ -9,7 +9,7 @@ Resources:
         Type: AWS::Serverless::Function
         Properties:
             Handler: build-ranked-archetypes.default
-            Runtime: nodejs10.x
+            Runtime: nodejs12.x
             Timeout: 900
             CodeUri: ./dist/build-ranked-archetypes
             MemorySize: 256
